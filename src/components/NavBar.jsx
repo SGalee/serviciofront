@@ -7,6 +7,7 @@ function NavBar() {
             <Link to= "/"> Inicie sesión </Link>
             <Link to= "/registro"> Registrese </Link>
             <Link to= "/dashboard"> Dashboard </Link>
+            <Link to= "/recuperacion"> Recuperación de Contraseña </Link>
         </div>
     </nav>
   )
