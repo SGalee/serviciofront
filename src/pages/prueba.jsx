@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 
-function prueba() {
+export default function prueba() {
   return (
-    <div>
-      
+    <div className="min-h-screen flex items-center justify-center">
+      <h1 className="text-2xl">Prueba</h1>
     </div>
-  )
+  );
 }
-
-export default prueba

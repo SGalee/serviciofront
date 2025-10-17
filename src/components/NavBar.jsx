@@ -4,10 +4,10 @@ function NavBar() {
   return (
     <nav className="navbar-links">
         <div>
-            <Link to= "/"> Inicie sesión </Link>
-            <Link to= "/registro"> Registrese </Link>
-            <Link to= "/dashboard"> Dashboard </Link>
-            <Link to= "/recuperacion"> Recuperación de Contraseña </Link>
+            <Link to= "/" className= "m-2"> Inicie sesión </Link>
+            <Link to= "/registro" className= "m-2"> Registrese </Link>
+            <Link to= "/dashboard" className= "m-2"> Dashboard </Link>
+            <Link to= "/recuperacion" className= "m-2"> Recuperación de Contraseña </Link>
         </div>
     </nav>
   )

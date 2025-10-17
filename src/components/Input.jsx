@@ -1,6 +1,8 @@
 export default function Input({
   label,
   id,
+  nombre = 'text',
+  apellido = 'text',
   type = "text",
   placeholder = "",
   value,

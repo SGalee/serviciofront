@@ -1,6 +1,8 @@
+import React, { useEffect } from 'react';
 import '../index.css';
 import Input from '../components/Input';
 import { Link } from 'react-router-dom';
+import BRecuperar from '../components/BRecuperar.jsx';
 
 export default function RecuperarContraseña() {
   return (
@@ -12,9 +14,9 @@ export default function RecuperarContraseña() {
 
           <Input label="Correo de recuperación" id="rec-email" type="email" placeholder="correo@usm.edu.ve" />
 
-          <button className="w-full mt-6 bg-yellow-400 text-white py-2 px-4 rounded-lg shadow hover:bg-yellow-500 transition">
-            Recuperar
-          </button>
+          <div className="w-full mt-6">
+            <BRecuperar />
+          </div>
 
           <div className="mt-3 text-center">
             <Link to="/" className="text-sm text-yellow-400 hover:underline hover:text-yellow-900">
