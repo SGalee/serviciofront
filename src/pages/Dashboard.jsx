@@ -5,14 +5,15 @@ import { Link } from 'react-router-dom';
 export default function Dashboard() {
   return (
     <div>
-      <div className="min-h-screen flex">
+      <div className="min-h-screen min-w-screen flex">
         <div className="w-1/5 bg-yellow-400 flex flex-col px-10">
 
           <h1 className="text-6xl font-semibold flex flex-col py-15 items-center">[LOGO]</h1>
           <h1 className="text-2xl font-semibold flex flex-col py-10 items-center focus:ring">Cuenta</h1>
-          <h1 className="text-2xl font-semibold flex flex-col py-10 items-center">Crear</h1>
           <h1 className="text-2xl font-semibold flex flex-col py-10 items-center">Buscar</h1>
-          <h1 className="text-2xl font-semibold flex flex-col py-10 items-center">Favoritos</h1>
+          <Link to = "/crearusuario" className="text-2xl font-semibold flex flex-col py-10 items-center">Crear Usuario</Link>
+          <Link to = "/creartesis" className="text-2xl font-semibold flex flex-col py-10 items-center">Crear Tesis</Link>
+          <h1 className="text-2xl font-semibold flex flex-col py-10 items-center">Historial</h1>
           <Link to="/" className="text-2xl font-semibold flex flex-col absolute bottom-10 left-27 hover:text-amber-900 underline">Cerrar sesión</Link>
 
         </div>
