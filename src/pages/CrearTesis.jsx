@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../index.css';
 import { Link } from 'react-router-dom';
+import NavBar from '../components/NavBar';
  
 export default function CrearTesis() {
   const [tesis, setTesis] = useState({
@@ -51,49 +52,40 @@ export default function CrearTesis() {
   }
  
   return (
+   
     <div className="min-h-screen min-w-screen flex">
-
-      <div className="sm:w-1/4 lg:w-1/4 bg-orange-500 flex flex-col items-center hover:text-4xl">
-    
-              <h1 className="text-6xl font-semibold flex flex-col my-15 ">[LOGO]</h1>
-    
-              <h1 className="text-3xl px-23 py-4 rounded-3xl hover:bg-yellow-100 hover:text-4xl transition  font-semibold my-6 focus:ring">Cuenta</h1>
-              <h1 className="text-3xl px-23 py-4 rounded-3xl hover:bg-yellow-100 hover:text-4xl transition font-semibold my-6 ">Buscar</h1>
-              <Link to="/crearusuario" className="text-3xl px-19 py-4 rounded-3xl hover:text-4xl hover:bg-yellow-100 font-semibold my-6 ">Usuarios</Link>
-              <Link to="/creartesis" className="text-4xl px-15 py-4 rounded-3xl bg-yellow-400 transition font-semibold my-6">Crear Tesis</Link>
-              <h1 className="text-3xl px-19 py-4 rounded-3xl hover:bg-yellow-200 hover:text-4xl transition font-semibold my-6">Historial</h1>
-              <Link to="/" className="text-3xl font-semibold flex flex-col bottom-10 left-27 my-10 hover:text-amber-900 underline">Cerrar sesión</Link> 
-            </div>
+    <NavBar />
+      
     
       <div className="w-full bg-blue-500 p-8">
         <h1 className="text-4xl font-semibold mb-6 text-white">Crear Tesis</h1>
 
-        <form onSubmit={handleSubmit} className="bg-blue-400 p-6 rounded-lg w-full">
-          <label className="block text-white mb-2">Título</label>
-          <input name="titulo" value={tesis.titulo} onChange={handleChange} className="w-full mb-4 p-2 rounded" placeholder="Título de la tesis" />
+        <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-2xl w-full">
+          <label className="block text-lg text-black mb-3 font-semibold">Título</label>
+          <input name="titulo" value={tesis.titulo} onChange={handleChange} className="w-full mb-4 p-2 rounded-2xl shadow" placeholder="Título de la tesis" />
 
-          <label className="block text-white mb-2">Resumen</label>
-          <textarea name="resumen" value={tesis.resumen} onChange={handleChange} className="w-full mb-4 p-2 rounded h-32" placeholder="Resumen breve"></textarea>
+          <label className="block text-lg text-black mb-3 font-semibold">Resumen</label>
+          <textarea name="resumen" value={tesis.resumen} onChange={handleChange} className="w-full mb-4 p-2 rounded-2xl shadow h-32" placeholder="Resumen breve"></textarea>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-white mb-2">Tutor</label>
-              <input name="tutor" value={tesis.tutor} onChange={handleChange} className="w-full p-2 rounded" placeholder="Nombre del tutor" />
+              <label className="block text-lg text-black mb-3 font-semibold">Tutor</label>
+              <input name="tutor" value={tesis.tutor} onChange={handleChange} className="w-full p-2 rounded-2xl shadow" placeholder="Nombre y apellido del tutor" />
             </div>
             <div>
-              <label className="block text-white mb-2">Año</label>
-              <input name="año" value={tesis.año} onChange={handleChange} type="number" className="w-full p-2 rounded" placeholder="Año de publicación" />
+              <label className="block text-black mb-3 font-semibold">Año</label>
+              <input name="año" value={tesis.año} onChange={handleChange} type="number" className="w-full p-2 rounded-2xl shadow" placeholder="Año de publicación" />
             </div>
           </div>
 
           {/* Dos inputs separados para primer y segundo autor */}
-          <label className="block text-white mt-4 mb-2">Primer autor</label>
-          <input name="autor1" value={tesis.autor1} onChange={handleChange} className="w-full mb-3 p-2 rounded" placeholder="Nombre del primer autor" />
-          <label className="block text-white mt-2 mb-2">Segundo autor</label>
-          <input name="autor2" value={tesis.autor2} onChange={handleChange} className="w-full mb-4 p-2 rounded" placeholder="Nombre del segundo autor (opcional)" />
+          <label className="block text-black mt-4 mb-3 font-semibold">Primer autor</label>
+          <input name="autor1" value={tesis.autor1} onChange={handleChange} className="w-full mb-3 p-2 rounded-2xl shadow" placeholder="Nombre y apellido (Obligatorio)" />
+          <label className="block text-black mt-2 mb-3 font-semibold">Segundo autor</label>
+          <input name="autor2" value={tesis.autor2} onChange={handleChange} className="w-full mb-4 p-2 rounded-2xl shadow" placeholder="Nombre y apellido (opcional)" />
 
-          <label className="block text-white mb-2">Tipo</label>
-          <select name="tipo" value={tesis.tipo} onChange={handleChange} className="w-full mb-4 p-2 rounded">
+          <label className="block text-black mb-3 font-semibold">Tipo</label>
+          <select name="tipo" value={tesis.tipo} onChange={handleChange} className="w-full mb-4 p-2 rounded-2xl shadow">
             <option value="pregrado">Pregrado</option>
             <option value="postgrado">Postgrado</option>
             <option value="doctorado">Doctorado</option>
@@ -101,7 +93,7 @@ export default function CrearTesis() {
           </select>
 
           {/* Input para importar archivo (PDF/DOCX) */}
-          <label className="block text-white mb-2">Archivo (PDF/DOCX)</label>
+          <label className="block text-black mb-3 font-semibold">Digitalización</label>
           <input
             type="file"
             accept=".pdf,application/pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -110,8 +102,8 @@ export default function CrearTesis() {
           />
           {tesis.archivo && <p className="text-sm text-white mb-4">Archivo seleccionado: {tesis.archivo.name}</p>}
  
-          <div className="flex justify-end">
-            <button type="submit" className="bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700">Guardar</button>
+          <div className="flex justify-items-center">
+            <button type="submit" className="bg-amber-600 flex flex-col text-white px-4 py-2 rounded hover:bg-amber-700">Guardar</button>
           </div>
         </form>
       </div>

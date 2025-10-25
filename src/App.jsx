@@ -10,7 +10,6 @@ import RecuperarContraseña from "./pages/RecuperarContraseña.jsx"
 function App() {
   return (
   <div>
-    <NavBar/>
    <main className='pages-adresses'>
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
