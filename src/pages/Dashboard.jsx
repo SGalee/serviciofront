@@ -27,8 +27,8 @@ export default function Dashboard() {
                      Buscar
                    </Link>
          
-                   <Link
-                     to="/crearusuario"
+                  <Link
+                    to="/usuario"
                       className="w-[90%] text-center bg-white/10 text-white hover:bg-white/20 transition rounded-3xl px-6 py-3 text-2xl font-semibold shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/50"
                    >
                      Usuarios

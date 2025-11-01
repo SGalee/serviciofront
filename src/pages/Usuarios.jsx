@@ -1,76 +1,30 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import NavBar from '../components/NavBar'
 
-function CrearUsuario() {
+function Usuarios() {
   return (
     <div className="min-h-screen min-w-screen flex">
-  
-        <nav className="bg-orange-500 w-full md:w-1/3 lg:w-1/3 max-w-[420px] min-w-[220px]">
-      <div className="px-6 py-8 flex flex-col items-center min-h-screen">
-        {/* Top: logo */}
-        <div className="text-6xl font-semibold text-white">[LOGO]</div>
+      <NavBar />
 
-        {/* Middle: links - centered and distributed */}
-        <div className="flex-1 flex flex-col justify-center items-center w-full gap-4">
-          <Link
-            to="/cuenta"
-            className="w-[90%] text-center bg-white/10 text-white hover:bg-white/20 transition rounded-3xl px-6 py-3 text-2xl font-semibold shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            Cuenta
-          </Link>
-
-          <Link
-            to="/dashboard"
-            className="w-[90%] text-center bg-white/10 text-white hover:bg-white/20 transition rounded-3xl px-6 py-3 text-2xl font-semibold shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            Buscar
-          </Link>
-
+      <div className="w-full bg-blue-500 p-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-4xl font-semibold text-white">Listado de usuarios</h1>
           <Link
             to="/crearusuario"
-            className="w-[90%] text-center bg-yellow-400 text-gray-900 hover:bg-yellow-300 transition rounded-3xl px-6 py-4 text-2xl font-bold shadow-md hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-yellow-300"
+            className="inline-flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-2xl hover:bg-amber-700 shadow"
           >
-            Usuarios
-          </Link>
-
-          <Link
-            to="/creartesis"
-            className="w-[90%] text-center bg-white/10 text-white hover:bg-white/20 transition rounded-3xl px-6 py-3 text-2xl font-semibold shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            Crear Tesis
-          </Link>
-
-          <Link
-            to="/historial"
-            className="w-[90%] text-center bg-white/10 text-white hover:bg-white/20 transition rounded-3xl px-6 py-3 text-2xl font-semibold shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/50"
-          >
-            Historial
+            + Crear usuario
           </Link>
         </div>
 
-        {/* Bottom: logout */}
-        <div className="w-full flex justify-center">
-          <Link
-            to="/"
-            className="w-[90%] text-center mt-4 mb-2 text-orange-700 bg-white rounded-full px-6 py-3 text-xl font-semibold hover:bg-white/95 hover:text-orange-800 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-white/60"
-          >
-            Cerrar sesión
-          </Link>
+        {/* Contenido de usuarios (lista, filtros, etc.) */}
+        <div className="bg-gray-100 p-6 rounded-2xl w-full">
+          <p className="text-gray-700">Aquí podrás listar y gestionar usuarios.</p>
         </div>
       </div>
-    </nav>
-
-      <div className="w-full bg-blue-500">
-        <h1 className="text-6xl font-semibold">Usuarios</h1>
-
-        <form className="w-full rounded-lg bg- shadow-">
-          <label> KELOKEEE</label>
-        </form>
-
-      </div>
-
     </div>
   )
 }
 
-export default CrearUsuario
+export default Usuarios

@@ -3,8 +3,40 @@ import Input from '../components/Input';
 import { Link } from 'react-router-dom';
 import BIniciar from '../components/BIniciar.jsx';
 import ColumnaColors from '../components/ColumnaColors.jsx'
+import React, { useState } from 'react';
 
 export default function Inicio() {
+  const [form, setForm] = useState({ correo: '', password: '' });
+  const [error, setError] = useState({});
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setForm((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const validate = () => {
+    const errores = {};
+    if (!form.email && !form.correo) {
+      // For safety if id differs, support both keys
+      errores.correo = 'El correo institucional es obligatorio';
+    }
+    const correo = form.email || form.correo || '';
+    if (correo && !/@usm\.edu\.ve$/i.test(correo.trim())) {
+      errores.correo = 'Debe ser un correo @usm.edu.ve';
+    }
+    if (!form.password) {
+      errores.password = 'La contraseña es obligatoria';
+    }
+    setError(errores);
+    return Object.keys(errores).length === 0;
+  };
+
+  const onSubmitClick = (e) => {
+    if (!validate()) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div className="min-h-screen flex">
       {/* Left: contenido (mitad izquierda) */}
@@ -12,14 +44,16 @@ export default function Inicio() {
         <div className="w-full max-w-lg bg-blue-700 rounded-xl shadow-md p-8">
           <h1 className="text-3xl font-bold mb-6 text-center text-white">Inicio de sesión</h1>
 
-          <Input label="Correo institucional" id="email" type="email" placeholder="correo@usm.edu.ve" />
+          <Input label="Correo institucional" id="correo" type="email" placeholder="correo@usm.edu.ve" value={form.correo} onChange={handleChange} error={!!error.correo} />
+          {error.correo && <p className="text-sm text-amber-200 mt-1">{error.correo}</p>}
           <div className="h-4" />
-          <Input label="Contraseña" id="password" type="password" placeholder="••••••••" />
+          <Input label="Contraseña" id="password" type="password" placeholder="••••••••" value={form.password} onChange={handleChange} error={!!error.password} />
+          {error.password && <p className="text-sm text-amber-200 mt-1">{error.password}</p>}
 
           <div className="mt-6 flex flex-col items-center">
-            <Link to="/dashboard" className="w-40 block">
-              <BIniciar />
-            </Link>
+            <div className="w-40">
+              <BIniciar to="/dashboard" onClick={onSubmitClick} />
+            </div>
 
             <div className="mt-3">
               <Link to="/recuperacion" className="text-sm text-white hover:underline hover:text-amber-800">

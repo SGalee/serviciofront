@@ -8,6 +8,7 @@ export default function Input({
   value,
   onChange,
   className = "",
+  error = false,
 }) {
   return (
     <div className={`w-full ${className}`}>
@@ -22,9 +23,11 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full px-2 py-2 border border-amber-200 rounded-lg shadow-sm bg-white
-                   focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300
-                   transition-color"
+        aria-invalid={error ? 'true' : 'false'}
+        className={`w-full px-2 py-2 border rounded-lg bg-white focus:outline-none transition-shadow
+          ${error
+            ? 'border-red-300 shadow-[0_0_0_4px_rgba(239,68,68,0.12)] focus:shadow-[0_0_0_6px_rgba(239,68,68,0.18)]'
+            : 'border-amber-200 shadow-sm focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300'}`}
       />
     </div>
   );
