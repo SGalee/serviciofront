@@ -1,28 +1,40 @@
 import '../index.css';
 import Input from '../components/Input';
-import { Link } from 'react-router-dom';
-import BIniciar from '../components/BIniciar.jsx';
-import ColumnaColors from '../components/ColumnaColors.jsx'
-import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { ROLES } from '../utils/roles';
 
 export default function Inicio() {
-  const [form, setForm] = useState({ correo: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState({});
+  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirigir si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const routePrefix = user.role === ROLES.ADMIN ? '/admin' : 
+                         user.role === ROLES.DOCENTE ? '/docente' : 
+                         '/estudiante';
+      navigate(`${routePrefix}/dashboard`);
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setForm((prev) => ({ ...prev, [id]: value }));
+    // Limpiar error del campo cuando el usuario empiece a escribir
+    if (error[id]) {
+      setError((prev) => ({ ...prev, [id]: '' }));
+    }
   };
 
   const validate = () => {
     const errores = {};
-    if (!form.email && !form.correo) {
-      // For safety if id differs, support both keys
-      errores.correo = 'El correo institucional es obligatorio';
-    }
-    const correo = form.email || form.correo || '';
-    if (correo && !/@usm\.edu\.ve$/i.test(correo.trim())) {
-      errores.correo = 'Debe ser un correo @usm.edu.ve';
+    if (!form.username) {
+      errores.username = 'El nombre de usuario es obligatorio';
     }
     if (!form.password) {
       errores.password = 'La contraseña es obligatoria';
@@ -31,9 +43,32 @@ export default function Inicio() {
     return Object.keys(errores).length === 0;
   };
 
-  const onSubmitClick = (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     if (!validate()) {
-      e.preventDefault();
+      return;
+    }
+
+    setLoading(true);
+    setError({});
+
+    try {
+      const result = await login(form.username, form.password);
+      
+      if (result.success) {
+        // La redirección se manejará en el useEffect
+        const routePrefix = result.user.role === ROLES.ADMIN ? '/admin' : 
+                           result.user.role === ROLES.DOCENTE ? '/docente' : 
+                           '/estudiante';
+        navigate(`${routePrefix}/dashboard`);
+      } else {
+        setError({ general: result.error || 'Error al iniciar sesión. Verifica tus credenciales.' });
+      }
+    } catch (err) {
+      setError({ general: 'Error de conexión. Intenta nuevamente.' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,27 +79,59 @@ export default function Inicio() {
         <div className="w-full max-w-lg bg-blue-700 rounded-xl shadow-md p-8">
           <h1 className="text-3xl font-bold mb-6 text-center text-white">Inicio de sesión</h1>
 
-          <Input label="Correo institucional" id="correo" type="email" placeholder="correo@usm.edu.ve" value={form.correo} onChange={handleChange} error={!!error.correo} />
-          {error.correo && <p className="text-sm text-amber-200 mt-1">{error.correo}</p>}
-          <div className="h-4" />
-          <Input label="Contraseña" id="password" type="password" placeholder="••••••••" value={form.password} onChange={handleChange} error={!!error.password} />
-          {error.password && <p className="text-sm text-amber-200 mt-1">{error.password}</p>}
+          <form onSubmit={handleSubmit}>
+            {error.general && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg">
+                <p className="text-sm text-white text-center">{error.general}</p>
+              </div>
+            )}
 
-          <div className="mt-6 flex flex-col items-center">
-            <div className="w-40">
-              <BIniciar to="/dashboard" onClick={onSubmitClick} />
-            </div>
+            <Input 
+              label="Usuario" 
+              id="username" 
+              type="text" 
+              placeholder="Tu nombre de usuario" 
+              value={form.username} 
+              onChange={handleChange} 
+              error={!!error.username}
+              disabled={loading}
+            />
+            {error.username && <p className="text-sm text-amber-200 mt-1">{error.username}</p>}
+            
+            <div className="h-4" />
+            
+            <Input 
+              label="Contraseña" 
+              id="password" 
+              type="password" 
+              placeholder="••••••••" 
+              value={form.password} 
+              onChange={handleChange} 
+              error={!!error.password}
+              disabled={loading}
+            />
+            {error.password && <p className="text-sm text-amber-200 mt-1">{error.password}</p>}
 
-            <div className="mt-3">
-              <Link to="/recuperacion" className="text-sm text-white hover:underline hover:text-amber-800">
-                Olvidaste tu contraseña
-              </Link>
-              <h1 className="text-sm items-center text-white flex flex-col">¿No tienes cuenta?</h1>
-              <Link to="/registro" className="text-sm text-white hover:underline text-center flex-col flex hover:text-amber-900">
-                Regístrate
-              </Link>
+            <div className="mt-6 flex flex-col items-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-amber-600 text-white px-6 py-3 rounded-2xl shadow hover:bg-amber-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition font-semibold text-lg"
+              >
+                {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+              </button>
+
+              <div className="mt-4 text-center">
+                <Link to="/recuperacion" className="text-sm text-white hover:underline hover:text-amber-200 block mb-2">
+                  ¿Olvidaste tu contraseña?
+                </Link>
+                <p className="text-sm text-white mt-3">¿No tienes cuenta?</p>
+                <Link to="/registro" className="text-sm text-white hover:underline hover:text-amber-200 font-semibold">
+                  Regístrate aquí
+                </Link>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>  
 

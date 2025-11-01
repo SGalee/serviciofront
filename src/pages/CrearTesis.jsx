@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import '../index.css';
-import { Link } from 'react-router-dom';
-import NavBar from '../components/NavBar';
  
 export default function CrearTesis() {
-
+  const [loading, setLoading] = useState(false);
   const [tesis, setTesis] = useState({
     titulo: '',
     resumen: '',
@@ -15,13 +13,12 @@ export default function CrearTesis() {
     tipo: 'pregrado',
     archivo: null, // almacena el File seleccionado
   });
+  const [error, setError] = useState({});
 
   function handleChange(e) {
     const { name, value } = e.target;
     setTesis(prev => ({ ...prev, [name]: value }));
   }
-
-  const[error, setError] = useState({});
 
   const validate = () => {
     let errores = {};
@@ -46,44 +43,73 @@ export default function CrearTesis() {
     setTesis(prev => ({ ...prev, archivo: file || null }));
   }
  
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if(validate()){
-      alert('Tesis guardada correctamente');
-      console.log(tesis);
-      setTesis({titulo: '',resumen: '', tutor: '', año: '', autor1: '', autor2: '',tipo: 'pregrado', archivo: null,});
-    } else {
+    
+    if(!validate()){
       console.log("Errores de validación:", error);
       return;
     }
-    // Guardar en localStorage (puedes reemplazar por llamada API)
-    const stored = JSON.parse(localStorage.getItem('tesis') || '[]');
-    // No se puede guardar File en localStorage; guardar metadatos del archivo
-    const archivoMeta = tesis.archivo
-      ? { name: tesis.archivo.name, type: tesis.archivo.type, size: tesis.archivo.size }
-      : null;
-    const saveObj = {
-      titulo: tesis.titulo,
-      resumen: tesis.resumen,
-      tutor: tesis.tutor,
-      año: tesis.año,
-      autor1: tesis.autor1,
-      autor2: tesis.autor2,
-      tipo: tesis.tipo,
-      archivo: archivoMeta,
-      id: Date.now(),
-    };
-    stored.push(saveObj);
-    localStorage.setItem('tesis', JSON.stringify(stored));
+
+    setLoading(true);
+    setError({});
+
+    try {
+      // Obtener el token del usuario
+      const token = localStorage.getItem('access_token');
+      
+      // Preparar FormData para enviar archivo
+      const formData = new FormData();
+      formData.append('titulo', tesis.titulo);
+      formData.append('autor', `${tesis.autor1}${tesis.autor2 ? ' y ' + tesis.autor2 : ''}`);
+      formData.append('resumen', tesis.resumen);
+      formData.append('tutor', tesis.tutor);
+      formData.append('fecha_publicacion', tesis.año);
+      formData.append('tipo', tesis.tipo);
+      formData.append('archivo_pdf', tesis.archivo); // Backend espera 'archivo_pdf'
+      
+      // Llamar a la API directamente con fetch
+      const response = await fetch('http://localhost:8000/api/tesis/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(JSON.stringify(errorData));
+      }
+
+      const data = await response.json();
+      
+      console.log('Tesis creada:', data);
+      alert('✅ Tesis guardada correctamente');
+      
+      // Limpiar el formulario
+      setTesis({
+        titulo: '',
+        resumen: '', 
+        tutor: '', 
+        año: '', 
+        autor1: '', 
+        autor2: '',
+        tipo: 'pregrado', 
+        archivo: null,
+      });
+      
+    } catch (err) {
+      console.error('Error al crear tesis:', err);
+      alert('❌ Error al guardar la tesis. Verifica tu conexión.');
+    } finally {
+      setLoading(false);
+    }
   }
  
   return (
-   
-    <div className="min-h-screen min-w-screen flex">
-    <NavBar />
-      
-      <div className="w-full bg-blue-500 p-8">
-        <h1 className="text-4xl font-semibold mb-6 text-white">Crear Tesis</h1>
+    <div className="w-full bg-blue-500 p-8">
+      <h1 className="text-4xl font-semibold mb-6 text-white">Crear Tesis</h1>
 
         <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-2xl w-full">
           <div>
@@ -214,13 +240,15 @@ export default function CrearTesis() {
           </div>
 
           <div className="flex justify-end">
-            <button type="submit" className="inline-flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-2xl shadow hover:bg-amber-700">
-              Guardar
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="inline-flex items-center gap-2 bg-amber-600 text-white px-5 py-2.5 rounded-2xl shadow hover:bg-amber-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            >
+              {loading ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
         </form>
       </div>
-
-    </div>
   );
 }
